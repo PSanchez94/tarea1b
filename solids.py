@@ -4,12 +4,17 @@ import scene_graph as sg
 import basic_shapes as bs
 
 
-class Platform:
-    def __init__(self, x, y):
+class HitBox:
+    def __init__(self, x, y, w, h):
         self.x = x
         self.y = y
-        self.width = 1.0
-        self.height = 0.1
+        self.width = w
+        self.height = h
+
+
+class Platform(HitBox):
+    def __init__(self, x, y):
+        super().__init__(x, y, 1.0, 0.1)
 
     def drawPlatform(self):
         # TODO: How to animate. Change texture per time?
@@ -17,8 +22,8 @@ class Platform:
         gpuGreyQuad = es.toGPUShape(bs.createColorQuad(0.3, 0.3, 0.3))
 
         platform = sg.SceneGraphNode("platform")
-        platform.transform = tr.scale(1)
-        platform.transform = tr.translate(1)
+        platform.transform = tr.uniformScale(1)
+        platform.transform = tr.translate(1, 1, 1)
         platform.childs += [gpuGreyQuad]
 
         return platform
