@@ -16,25 +16,27 @@ import basic_shapes as bs
 
 class Monkey:
     def __init__(self):
-        self.x = 0
-        self.y = 0
-        self.z = 0
+        self.gpu_shape = es.toGPUShape(bs.createColorQuad(0, 0, 0))
+        self.x = 0.5
+        self.y = 0.5
+        self.height = 1
+        self.width = 1
         self.x_speed = 0.01
         self.jump_speed = 0.05
         self.is_jumping = False
 
+    def move(self, left, right):
+        self.x += self.x_speed * (right - left)
 
-def createMonkey():
+    def createMonkey(self):
 
-    # TODO: How to animate. Change texture per time?
-    # monkey_texture= es.toGPUShape(bs.createTextureQuad("textures/wheel.png", 1, 1), GL_REPEAT, GL_NEAREST)
-    gpuBlackQuad = es.toGPUShape(bs.createColorQuad(0, 0, 0))
+        # TODO: How to animate. Change texture per time?
+        # monkey_texture= es.toGPUShape(bs.createTextureQuad("textures/wheel.png", 1, 1), GL_REPEAT, GL_NEAREST)
+        cube = sg.SceneGraphNode("cube")
+        cube.transform = tr.uniformScale(0.5)
+        cube.childs += [self.gpu_shape]
 
-    cube = sg.SceneGraphNode("cube")
-    cube.transform = tr.uniformScale(0.5)
-    cube.childs += [gpuBlackQuad]
-
-    return cube
+        return cube
 
 
 

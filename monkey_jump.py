@@ -7,16 +7,9 @@ import scene_graph as sg
 import transformations as tr
 
 import monkey
+import controller
 
-
-class Controller:
-    def __init__(self):
-        self.leftKeyOn = False
-        self.rightKeyOn = False
-        self.jumpKeyOn = False
-
-
-controller = Controller()
+controller = controller.Controller()
 
 
 def on_key(window, key, scancode, action, mods):
@@ -74,15 +67,23 @@ if __name__ == "__main__":
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     # Creating shapes on GPU memory
-    a_monkey = monkey.Monkey()
-    cube = monkey.createMonkey()
+    main_scene = sg.SceneGraphNode("main_scene")
+    main_scene.transform = tr.uniformScale(0.5)
+    main_scene.transform = tr.translate(-1, -1, 0)
 
+    controller.createMonkey()
+
+    cube = controller.monkey.createMonkey()
+    main_scene.childs += [cube]
+    platforms = controller.drawPlatforms()
+    main_scene.childs += [platforms]
 
     # Our shapes here are always fully painted
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
     # Main window loop
     last_rot = 0
+
     while not glfw.window_should_close(window):
         # Using GLFW to check for input events
         glfw.poll_events()
@@ -96,22 +97,21 @@ if __name__ == "__main__":
         past_time = curr_time - 0.05
         curr_i = int(curr_time)
 
-        if controller.leftKeyOn or controller.rightKeyOn:
-            a_monkey.x += a_monkey.x_speed*(controller.rightKeyOn - controller.leftKeyOn)
-
         if controller.jumpKeyOn:
 
-            if a_monkey.is_jumping is False:
-                a_monkey.is_jumping = True
+            if controller.monkey.is_jumping is False:
+                controller.monkey.is_jumping = True
                 jump_start_time = theta
 
-            a_monkey.y += a_monkey.jump_speed*(
+            controller.monkey.y += controller.monkey.jump_speed*(
                     controller.jumpKeyOn - 20*controller.jumpKeyOn*((theta - jump_start_time)**2))
 
-        cube.transform = tr.translate(a_monkey.x, a_monkey.y, a_monkey.z)
+        controller.moveMonkey()
+
+        cube.transform = tr.translate(controller.monkey.x, controller.monkey.y, 0)
 
         # Drawing
-        sg.drawSceneGraphNode(cube, pipeline, "transform")
+        sg.drawSceneGraphNode(main_scene, pipeline, "transform")
 
         # Once the render is done, buffers are swapped, showing only the complete scene.
         glfw.swap_buffers(window)
