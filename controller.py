@@ -14,9 +14,7 @@ class Controller:
         self.jumpKeyOn = False
         self.monkey = None
         self.gravity = -0.005
-        self.platform_list = [solids.Platform(0, 0), solids.Platform(1, 0), solids.Platform(2, 0),
-                              solids.Platform(3, 0), solids.Platform(4, 0),
-                              solids.Platform(1, 1), solids.Platform(3, 1)]
+        self.platform_list = [solids.Platform(1, 1), solids.Platform(3, 1)]
 
     def createMonkey(self):
         self.monkey = monkey.Monkey(2.3, 0.0)
@@ -51,6 +49,18 @@ class Controller:
 
         self.monkey.move_x(self.leftKeyOn, self.rightKeyOn)
         self.monkey.move_y()
+
+        if self.monkey.y < 0:
+            self.monkey.y = 0
+            self.monkey.is_jumping = False
+            self.monkey.is_falling = False
+            return
+        elif self.monkey.x < 0:
+            self.monkey.x = 0
+            return
+        elif self.monkey.x > 4.7:
+            self.monkey.x = 4.7
+            return
 
     def drawStage(self):
         stage_scene = sg.SceneGraphNode("stage_scene")
