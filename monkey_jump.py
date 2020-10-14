@@ -92,13 +92,13 @@ if __name__ == "__main__":
         # Clearing the screen in both, color and depth
         glClear(GL_COLOR_BUFFER_BIT)
 
-        theta = glfw.get_time()
+        theta = 0.4*glfw.get_time()
         # Modifying only a specific node in the scene graph
         curr_time = glfw.get_time()+1
         past_time = curr_time - 0.05
         curr_i = int(curr_time)
 
-        if controller.jumpKeyOn:
+        if controller.jumpKeyOn and controller.monkey.is_falling is False:
             controller.monkey.start_jump()
 
         controller.moveMonkey()

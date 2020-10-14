@@ -19,7 +19,7 @@ class Controller:
                               solids.Platform(1, 1), solids.Platform(3, 1)]
 
     def createMonkey(self):
-        self.monkey = monkey.Monkey(0, 0.5)
+        self.monkey = monkey.Monkey(2.3, 0.0)
         self.monkey.gravity = self.gravity
 
     def moveMonkey(self):
@@ -27,13 +27,13 @@ class Controller:
         for platform in self.platform_list:
             if self.monkey.collidesWith(platform):
                 if self.monkey.is_jumping or self.monkey.is_falling:
-                    if self.monkey.y < platform.y + platform.height < self.monkey.y + self.monkey.height:
+                    if platform.y < self.monkey.y < platform.y + platform.height < self.monkey.y + self.monkey.height:
                         self.monkey.y = platform.y + platform.height
                         self.monkey.is_jumping = False
                         self.monkey.is_falling = False
                         self.monkey.jump_vel = 0.0
                         return
-                    elif self.monkey.y <= platform.y < self.monkey.y + self.monkey.height:
+                    elif self.monkey.y < platform.y < self.monkey.y + self.monkey.height < platform.y + platform.height:
                         self.monkey.y = platform.y - self.monkey.height
                         self.monkey.start_fall()
                         return
@@ -46,11 +46,10 @@ class Controller:
                         self.monkey.x = platform.x - self.monkey.width
                         return
             else:
-                if self.monkey.is_falling is False:
+                if self.monkey.is_falling is False and self.monkey.is_jumping is False:
                     self.monkey.start_fall()
 
         self.monkey.move_x(self.leftKeyOn, self.rightKeyOn)
-
         self.monkey.move_y()
 
     def drawStage(self):

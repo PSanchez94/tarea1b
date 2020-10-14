@@ -12,7 +12,7 @@ import scene_graph as sg
 
 import solids
 
-jump_start_vel = 0.11
+jump_start_vel = 0.105
 
 
 class Monkey(solids.HitBox):
@@ -41,9 +41,12 @@ class Monkey(solids.HitBox):
         if self.is_jumping is False:
             self.jump_vel = jump_start_vel
             self.is_jumping = True
+            self.is_falling = False
 
     def start_fall(self):
         self.is_falling = True
+        self.jump_vel = 0.0
+        self.is_jumping = False
 
     def createMonkey(self):
         # TODO: How to animate. Change texture per time?
