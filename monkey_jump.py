@@ -29,7 +29,7 @@ def on_key(window, key, scancode, action, mods):
             controller.leftKeyOn = False
         elif key == glfw.KEY_RIGHT:
             controller.rightKeyOn = False
-        elif key == glfw.KEY_SPACE and not controller.jumpKeyOn:
+        elif key == glfw.KEY_SPACE and controller.jumpKeyOn:
             controller.jumpKeyOn = False
 
 
@@ -92,20 +92,14 @@ if __name__ == "__main__":
         # Clearing the screen in both, color and depth
         glClear(GL_COLOR_BUFFER_BIT)
 
-        theta = 0.3 * glfw.get_time()
+        theta = glfw.get_time()
         # Modifying only a specific node in the scene graph
         curr_time = glfw.get_time()+1
         past_time = curr_time - 0.05
         curr_i = int(curr_time)
 
         if controller.jumpKeyOn:
-
-            if controller.monkey.is_jumping is False:
-                controller.monkey.is_jumping = True
-                jump_start_time = theta
-
-            controller.monkey.y += controller.monkey.jump_speed*(
-                    controller.jumpKeyOn - 20*controller.jumpKeyOn*((theta - jump_start_time)**2))
+            controller.monkey.start_jump()
 
         controller.moveMonkey()
 
