@@ -18,8 +18,7 @@ import solids
 
 class Monkey(solids.HitBox):
     def __init__(self, x, y):
-        super().__init__(x, y, 1.0, 1.0)
-        self.gpu_shape = es.toGPUShape(bs.createColorQuad(0, 0, 0))
+        super().__init__(x, y, 0.3, 0.5)
         self.x_speed = 0.01
         self.jump_speed = 0.05
         self.is_jumping = False
@@ -30,17 +29,9 @@ class Monkey(solids.HitBox):
     def createMonkey(self):
         # TODO: How to animate. Change texture per time?
         # monkey_texture= es.toGPUShape(bs.createTextureQuad("textures/wheel.png", 1, 1), GL_REPEAT, GL_NEAREST)
+
         cube = sg.SceneGraphNode("cube")
-        cube.transform = tr.uniformScale(0.5)
-        cube.childs += [self.gpu_shape]
+        cube.transform = tr.translate(self.x, self.y - self.height, 0)
+        cube.childs += [es.toGPUShape(self.hitboxShape())]
 
         return cube
-
-
-
-
-"""def monkeyJump(aMonkey):
-    jumping_state = False
-
-    monkey.transform = tr.translate[]"""
-

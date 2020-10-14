@@ -12,29 +12,15 @@ class HitBox:
         self.height = h
 
     def collidesWith(self, hitbox):
-        if self.y > hitbox.y - hitbox.height and self.y - self.height < hitbox.y:
+        if self.y + self.height > hitbox.y and self.y < hitbox.y + hitbox.height:
             if self.x < hitbox.x + hitbox.width and self.x + self.width > hitbox.x:
                 return True
 
+    def hitboxShape(self):
 
-class Platform(HitBox):
-    def __init__(self, x, y):
-        super().__init__(x, y, 1.0, 0.1)
-
-    def drawPlatform(self):
-
-        platform = sg.SceneGraphNode("platform")
-        platform.transform = tr.uniformScale(1)
-        platform.transform = tr.translate(1, 1, 1)
-        platform.childs += [self.platformShape()]
-
-        return platform
-
-    def platformShape(self):
-
-        r = 0.2
-        g = 0.2
-        b = 0.2
+        r = 1.0
+        g = 0.0
+        b = 0.0
 
         # Defining locations and colors for each vertex of the shape
         vertices = [
@@ -51,3 +37,16 @@ class Platform(HitBox):
             2, 3, 0]
 
         return bs.Shape(vertices, indices)
+
+
+class Platform(HitBox):
+    def __init__(self, x, y):
+        super().__init__(x, y - 0.1, 1.0, 0.1)
+
+    def drawPlatform(self):
+
+        platform = sg.SceneGraphNode("platform (" + str(self.x) + ", " + str(self.y) + ") Position")
+        platform.transform = tr.translate(self.x, self.y, 0)
+        platform.childs += [es.toGPUShape(self.hitboxShape())]
+
+        return platform

@@ -67,16 +67,17 @@ if __name__ == "__main__":
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     # Creating shapes on GPU memory
+    main_scene_translate = sg.SceneGraphNode("main_scene")
+    main_scene_translate.transform = tr.translate(-2.5, -2.5, 0)
     main_scene = sg.SceneGraphNode("main_scene")
-    main_scene.transform = tr.uniformScale(0.5)
-    main_scene.transform = tr.translate(-1, -1, 0)
+    main_scene.transform = tr.uniformScale(0.4)
+    main_scene.childs += [main_scene_translate]
 
     controller.createMonkey()
 
     cube = controller.monkey.createMonkey()
-    main_scene.childs += [cube]
-    platforms = controller.drawPlatforms()
-    main_scene.childs += [platforms]
+    main_scene_translate.childs += [cube]
+    main_scene_translate.childs += [controller.drawStage()]
 
     # Our shapes here are always fully painted
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
