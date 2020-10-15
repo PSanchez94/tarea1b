@@ -15,6 +15,7 @@ class Controller:
         self.monkey = None
         self.gravity = -0.005
         self.platform_list = []
+        self.current_floor = 0
 
     def createMonkey(self):
         self.monkey = monkey.Monkey(2.3, 0.0)
@@ -55,11 +56,11 @@ class Controller:
             self.monkey.is_jumping = False
             self.monkey.is_falling = False
             return
-        elif self.monkey.x < 0:
-            self.monkey.x = 0
+        elif self.monkey.x < 0.8:
+            self.monkey.x = 0.8
             return
-        elif self.monkey.x > 4.7:
-            self.monkey.x = 4.7
+        elif self.monkey.x > 3.9:
+            self.monkey.x = 3.9
             return
 
     def drawStage(self):
