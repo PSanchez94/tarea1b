@@ -16,6 +16,7 @@ class Controller:
         self.gravity = -0.005
         self.platform_list = []
         self.current_floor = 0
+        self.banana = None
 
     def createMonkey(self):
         self.monkey = monkey.Monkey(2.3, 0.0)
@@ -73,3 +74,10 @@ class Controller:
 
     def add_platform(self, x, y):
         self.platform_list.append(solids.Platform(x+1, y+1))
+
+    def createBanana(self):
+        self.banana = solids.Banana(self.platform_list[len(self.platform_list) - 1].x +
+                                    self.platform_list[len(self.platform_list) - 1].width/2,
+                                    self.platform_list[len(self.platform_list) - 1].y + 0.6)
+        self.banana.x -= self.banana.width/2
+

@@ -54,7 +54,7 @@ class Platform(HitBox):
 
 class Banana(HitBox):
     def __init__(self, x, y):
-        super().__init__(x, y - 0.1, 0.5, 0.5)
+        super().__init__(x, y - 0.1, 0.3, 0.3)
 
     def drawPlatform(self):
 
