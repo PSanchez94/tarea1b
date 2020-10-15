@@ -14,7 +14,10 @@ class Controller:
         self.jumpKeyOn = False
         self.monkey = None
         self.gravity = -0.005
-        self.platform_list = [solids.Platform(1, 1), solids.Platform(3, 1)]
+        self.platform_list = [solids.Platform(1, 1), solids.Platform(3, 1),
+                              solids.Platform(1, 2), solids.Platform(2, 2),
+                              solids.Platform(3, 3), solids.Platform(3, 3),
+                              solids.Platform(2, 4), solids.Platform(3, 4), ]
 
     def createMonkey(self):
         self.monkey = monkey.Monkey(2.3, 0.0)

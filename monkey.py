@@ -18,7 +18,7 @@ jump_start_vel = 0.105
 class Monkey(solids.HitBox):
     def __init__(self, x, y):
         super().__init__(x, y, 0.3, 0.5)
-        self.x_speed = 0.02
+        self.x_speed = 0.05
         self.jump_vel = 0.0
         self.gravity = -0.01
         self.is_jumping = False
@@ -30,12 +30,9 @@ class Monkey(solids.HitBox):
         self.x += self.x_speed * (right - left)
 
     def move_y(self):
-        if self.is_jumping:
+        if self.is_jumping or self.is_falling:
             self.y += self.jump_vel
-            self.jump_vel += self.gravity
-        elif self.is_falling:
-            self.y += self.jump_vel
-            self.jump_vel += self.gravity
+            self.jump_vel = max(self.jump_vel + self.gravity, -0.105)
 
     def start_jump(self):
         if self.is_jumping is False:

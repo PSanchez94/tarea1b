@@ -39,8 +39,8 @@ if __name__ == "__main__":
     if not glfw.init():
         sys.exit()
 
-    width = 600
-    height = 600
+    width = 800
+    height = 800
 
     window = glfw.create_window(width, height, "Monkey Jump", None, None)
 
