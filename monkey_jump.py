@@ -1,4 +1,5 @@
 import sys
+import csv
 import glfw
 from OpenGL.GL import *
 
@@ -34,6 +35,17 @@ def on_key(window, key, scancode, action, mods):
 
 
 if __name__ == "__main__":
+
+    print(sys.argv[1])
+
+    with open(sys.argv[1]) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            for i in range(3):
+                if row[i] == "1":
+                    controller.add_platform(i, line_count)
+            line_count += 1
 
     # Initialize glfw
     if not glfw.init():
