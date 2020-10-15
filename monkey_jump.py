@@ -189,6 +189,8 @@ if __name__ == "__main__":
 
         if controller.banana.collidesWith(controller.monkey):
             sys.exit("Got da dude")
+        elif controller.monkey.y < scene_movement:
+            sys.exit("Ya fell out")
 
         cube.transform = tr.translate(controller.monkey.x, controller.monkey.y, 0)
         sg.findNode(main_scene_translate, "Sky").transform = tr.translate(0.0, scene_movement * 0.3, 0)
