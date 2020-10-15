@@ -6,6 +6,7 @@ from OpenGL.GL import *
 import easy_shaders as es
 import scene_graph as sg
 import transformations as tr
+import basic_shapes as bs
 
 import monkey
 import controller
@@ -32,6 +33,29 @@ def on_key(window, key, scancode, action, mods):
             controller.rightKeyOn = False
         elif key == glfw.KEY_SPACE and controller.jumpKeyOn:
             controller.jumpKeyOn = False
+
+
+def background():
+
+    r = 0.8
+    g = 0.8
+    b = 1.0
+
+    # Defining locations and colors for each vertex of the shape
+    vertices = [
+        #   positions        colors
+        0.0, 0.0, 0.0, r, g, b,
+        4.0, 0.0, 0.0, r, g, b,
+        4.0, 4.0, 0.0, r, g, b,
+        0.0, 4.0, 0.0, r, g, b]
+
+    # Defining connections among vertices
+    # We have a triangle every 3 indices specified
+    indices = [
+        0, 1, 2,
+        2, 3, 0]
+
+    return bs.Shape(vertices, indices)
 
 
 if __name__ == "__main__":
@@ -79,11 +103,19 @@ if __name__ == "__main__":
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     # Creating shapes on GPU memory
-    main_scene_translate = sg.SceneGraphNode("main_scene")
+    background1 = sg.SceneGraphNode("Background1")
+    background1.childs += [es.toGPUShape(background())]
+
+    main_scene_translate = sg.SceneGraphNode("Main Scene Translate")
     main_scene_translate.transform = tr.translate(-2.5, -2.5, 0)
-    main_scene = sg.SceneGraphNode("main_scene")
-    main_scene.transform = tr.uniformScale(0.4)
-    main_scene.childs += [main_scene_translate]
+    main_scene_translate.childs += [background1]
+
+    main_scene_scale = sg.SceneGraphNode("Main Scene Scale")
+    main_scene_scale.transform = tr.uniformScale(0.4)
+    main_scene_scale.childs += [main_scene_translate]
+
+    main_scene = sg.SceneGraphNode("Main Scene")
+    main_scene.childs += [main_scene_scale]
 
     controller.createMonkey()
 
@@ -93,9 +125,6 @@ if __name__ == "__main__":
 
     # Our shapes here are always fully painted
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-
-    # Main window loop
-    last_rot = 0
 
     while not glfw.window_should_close(window):
         # Using GLFW to check for input events
@@ -116,6 +145,8 @@ if __name__ == "__main__":
         controller.moveMonkey()
 
         cube.transform = tr.translate(controller.monkey.x, controller.monkey.y, 0)
+        background1.transform = tr.translate(0, (controller.monkey.y)*0.2, 0)
+        main_scene.transform = tr.translate(0, -(controller.monkey.y - 0.5)*0.4, 0)
 
         # Drawing
         sg.drawSceneGraphNode(main_scene, pipeline, "transform")

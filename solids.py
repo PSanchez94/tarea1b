@@ -45,7 +45,20 @@ class Platform(HitBox):
 
     def drawPlatform(self):
 
-        platform = sg.SceneGraphNode("platform (" + str(self.x) + ", " + str(self.y) + ") Position")
+        platform = sg.SceneGraphNode("Platform (" + str(self.x) + ", " + str(self.y) + ") Position")
+        platform.transform = tr.translate(self.x, self.y, 0)
+        platform.childs += [es.toGPUShape(self.hitboxShape())]
+
+        return platform
+
+
+class Banana(HitBox):
+    def __init__(self, x, y):
+        super().__init__(x, y - 0.1, 0.5, 0.5)
+
+    def drawPlatform(self):
+
+        platform = sg.SceneGraphNode("Bananas (" + str(self.x) + ", " + str(self.y) + ") Position")
         platform.transform = tr.translate(self.x, self.y, 0)
         platform.childs += [es.toGPUShape(self.hitboxShape())]
 

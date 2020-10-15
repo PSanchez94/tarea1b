@@ -62,8 +62,6 @@ class Controller:
             self.monkey.x = 4.7
             return
 
-    #def setStage(self, ):
-
     def drawStage(self):
         stage_scene = sg.SceneGraphNode("stage_scene")
 
