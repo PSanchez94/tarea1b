@@ -25,6 +25,8 @@ class Monkey(solids.HitBox):
         self.is_falling = False
         self.jump_start_time = 0
         self.jump_fall_time = 0
+        self.collision = True
+        self.has_banana = False
 
     def move_x(self, left, right):
         self.x += self.x_speed * (right - left)
@@ -54,3 +56,9 @@ class Monkey(solids.HitBox):
         cube.childs += [es.toGPUShape(self.hitboxShape())]
 
         return cube
+
+    def collidesWith(self, hitbox):
+        if self.collision:
+            if self.y + self.height > hitbox.y and self.y < hitbox.y + hitbox.height:
+                if self.x < hitbox.x + hitbox.width and self.x + self.width > hitbox.x:
+                    return True

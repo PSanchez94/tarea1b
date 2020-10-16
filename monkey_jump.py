@@ -150,8 +150,8 @@ if __name__ == "__main__":
 
     controller.createMonkey()
 
-    cube = controller.monkey.createMonkey()
-    main_scene_translate.childs += [cube]
+    monkey = controller.monkey.createMonkey()
+    main_scene_translate.childs += [monkey]
     main_scene_translate.childs += [controller.drawStage()]
 
     scene_movement = -0.5
@@ -173,26 +173,46 @@ if __name__ == "__main__":
         past_time = curr_time - 0.05
         curr_i = int(curr_time)
 
+        # Jump is key has been pressed and monkey is airborne
         if controller.jumpKeyOn and controller.monkey.is_falling is False:
             controller.monkey.start_jump()
 
-        controller.moveMonkey()
-
+        # Move scene upon reaching 2 floors above current one
         if controller.monkey.y > controller.current_floor + 2 and scene_moving is False:
             scene_moving = True
             controller.current_floor = controller.monkey.y
 
+        # Move the scene smoothly
         if scene_moving and scene_movement < controller.current_floor - 1.0:
             scene_movement += 0.05
             if scene_movement > controller.current_floor - 1.0:
                 scene_moving = False
 
-        if controller.banana.collidesWith(controller.monkey):
-            sys.exit("Got da dude")
-        elif controller.monkey.y < scene_movement:
-            sys.exit("Ya fell out")
+        # Lose condition upon reaching base of scene
+        if controller.monkey.y < scene_movement + 0.3 and controller.lost is False:
+            controller.lost = True
+            controller.end_game_time = theta
 
-        cube.transform = tr.translate(controller.monkey.x, controller.monkey.y, 0)
+        # Lose animation start and end
+        if controller.lost:
+            controller.monkey.collision = False
+            controller.monkey.start_jump()
+            controller.monkey.is_falling = False
+            if theta - controller.end_game_time > 0.35:
+                sys.exit("You fell out.")
+
+        # Win condition
+        if controller.won is False and controller.monkey.has_banana:
+            controller.won = True
+            controller.end_game_time = theta
+        elif controller.won:
+            if theta - controller.end_game_time > 0.5:
+                sys.exit("You won!")
+        else:
+            controller.moveMonkey()
+
+        # Scene translation
+        monkey.transform = tr.translate(controller.monkey.x, controller.monkey.y, 0)
         sg.findNode(main_scene_translate, "Sky").transform = tr.translate(0.0, scene_movement * 0.3, 0)
         sg.findNode(main_scene_translate, "Forest").transform = tr.translate(0.0, scene_movement * 0.6, 0)
         sg.findNode(main_scene_translate, "Trees").transform = tr.translate(0.0, scene_movement * 0.1, 0)

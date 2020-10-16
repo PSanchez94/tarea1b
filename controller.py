@@ -17,12 +17,18 @@ class Controller:
         self.platform_list = []
         self.current_floor = 0
         self.banana = None
+        self.lost = False
+        self.won = False
+        self.end_game_time = 0
 
     def createMonkey(self):
         self.monkey = monkey.Monkey(2.3, 0.0)
         self.monkey.gravity = self.gravity
 
     def moveMonkey(self):
+
+        if self.banana.collidesWith(self.monkey):
+            self.monkey.has_banana = True
 
         for platform in self.platform_list:
             if self.monkey.collidesWith(platform):
@@ -79,5 +85,5 @@ class Controller:
         self.banana = solids.Banana(self.platform_list[len(self.platform_list) - 1].x +
                                     self.platform_list[len(self.platform_list) - 1].width/2,
                                     self.platform_list[len(self.platform_list) - 1].y + 0.6)
-        self.banana.x -= self.banana.width/2
 
+        self.banana.x -= self.banana.width/2
