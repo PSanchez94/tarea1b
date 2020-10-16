@@ -3,6 +3,7 @@ import easy_shaders as es
 import scene_graph as sg
 import basic_shapes as bs
 
+from OpenGL.GL import *
 
 class HitBox:
     def __init__(self, x, y, w, h):
@@ -16,7 +17,7 @@ class HitBox:
             if self.x < hitbox.x + hitbox.width and self.x + self.width > hitbox.x:
                 return True
 
-    def hitboxShape(self):
+    def hitboxShape(self, image_filename):
 
         r = 1.0
         g = 0.0
@@ -25,10 +26,10 @@ class HitBox:
         # Defining locations and colors for each vertex of the shape
         vertices = [
             #   positions        colors
-            0.0, 0.0, 0.0, r, g, b,
-            self.width, 0.0, 0.0, r, g, b,
-            self.width, self.height, 0.0, r, g, b,
-            0.0, self.height, 0.0, r, g, b]
+            0.0, 0.0, 0.0, 0.0, 1.0,
+            self.width, 0.0, 0.0, 1.0, 1.0,
+            self.width, self.height, 0.0, 1.0, 0.0,
+            0.0, self.height, 0.0, 0.0, 0.0]
 
         # Defining connections among vertices
         # We have a triangle every 3 indices specified
@@ -36,7 +37,9 @@ class HitBox:
             0, 1, 2,
             2, 3, 0]
 
-        return bs.Shape(vertices, indices)
+        textureFileName = image_filename
+
+        return bs.Shape(vertices, indices, textureFileName)
 
 
 class Platform(HitBox):
@@ -47,7 +50,7 @@ class Platform(HitBox):
 
         platform = sg.SceneGraphNode("Platform (" + str(self.x) + ", " + str(self.y) + ") Position")
         platform.transform = tr.translate(self.x, self.y, 0)
-        platform.childs += [es.toGPUShape(self.hitboxShape())]
+        platform.childs += [es.toGPUShape(self.hitboxShape("textures/platform.png"), GL_REPEAT, GL_NEAREST)]
 
         return platform
 
@@ -60,6 +63,6 @@ class Banana(HitBox):
 
         platform = sg.SceneGraphNode("Bananas (" + str(self.x) + ", " + str(self.y) + ") Position")
         platform.transform = tr.translate(self.x, self.y, 0)
-        platform.childs += [es.toGPUShape(self.hitboxShape())]
+        platform.childs += [es.toGPUShape(self.hitboxShape("textures/banana.png"), GL_REPEAT, GL_NEAREST)]
 
         return platform

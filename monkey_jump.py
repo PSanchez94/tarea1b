@@ -34,30 +34,51 @@ def on_key(window, key, scancode, action, mods):
         elif key == glfw.KEY_SPACE and controller.jumpKeyOn:
             controller.jumpKeyOn = False
 
+
+def createTextureQuad(image_filename, x, y, nx=1, ny=1):
+
+    # Defining locations and texture coordinates for each vertex of the shape
+    vertices = [
+    #   positions        texture
+         0.0, 0.0, 0.0,  0, ny,
+         x, 0.0, 0.0, nx, ny,
+         x,  y, 0.0, nx, 0,
+         0.0,  y, 0.0,  0, 0]
+
+    # Defining connections among vertices
+    # We have a triangle every 3 indices specified
+    indices = [
+         0, 1, 2,
+         2, 3, 0]
+
+    textureFileName = image_filename
+
+    return bs.Shape(vertices, indices, textureFileName)
+
 def createBackgroundScenes():
     sky1_texture = sg.SceneGraphNode("Sky 1 Texture")
     sky1_texture.transform = tr.translate(0.5, 0*4, 0)
-    sky1_texture.childs += [es.toGPUShape(background(0.5, 0.5, 1.0))]
+    sky1_texture.childs += [es.toGPUShape(createTextureQuad("textures/sky1.png", 4, 4, 1, 1), GL_REPEAT, GL_NEAREST)]
 
     sky2_texture = sg.SceneGraphNode("Sky 2 Texture")
     sky2_texture.transform = tr.translate(0.5, 1*4, 0)
-    sky2_texture.childs += [es.toGPUShape(background(0.6, 0.6, 1.0))]
+    sky2_texture.childs += [es.toGPUShape(createTextureQuad("textures/sky2.png", 4, 4, 1, 1), GL_REPEAT, GL_NEAREST)]
 
     sky3_texture = sg.SceneGraphNode("Sky 3 Texture")
     sky3_texture.transform = tr.translate(0.5, 2*4, 0)
-    sky3_texture.childs += [es.toGPUShape(background(0.7, 0.7, 1.0))]
+    sky3_texture.childs += [es.toGPUShape(createTextureQuad("textures/sky3.png", 4, 4, 1, 1), GL_REPEAT, GL_NEAREST)]
 
     sky4_texture = sg.SceneGraphNode("Sky 4 Texture")
     sky4_texture.transform = tr.translate(0.5, 3*4, 0)
-    sky4_texture.childs += [es.toGPUShape(background(0.8, 0.8, 1.0))]
+    sky4_texture.childs += [es.toGPUShape(createTextureQuad("textures/sky4.png", 4, 4, 1, 1), GL_REPEAT, GL_NEAREST)]
 
     forest_texture = sg.SceneGraphNode("Forest Texture")
     forest_texture.transform = tr.translate(0.5, -0.5, 0)
-    forest_texture.childs += [es.toGPUShape(background(0.4, 0.4, 0.0))]
+    forest_texture.childs += [es.toGPUShape(createTextureQuad("textures/forest.png", 4, 4, 1, 1), GL_REPEAT, GL_NEAREST)]
 
     trees_texture = sg.SceneGraphNode("Trees Texture")
     trees_texture.transform = tr.translate(0.5, -0.5, 0)
-    trees_texture.childs += [es.toGPUShape(background(0.2, 0.2, 0.0))]
+    trees_texture.childs += [es.toGPUShape(createTextureQuad("textures/trees.png", 4, 4, 1, 1), GL_REPEAT, GL_NEAREST)]
 
     sky = sg.SceneGraphNode("Sky")
     sky.childs += [sky1_texture] + [sky2_texture] + [sky3_texture] + [sky4_texture]
@@ -69,24 +90,6 @@ def createBackgroundScenes():
     trees.childs += [trees_texture]
 
     return [sky] + [forest] + [trees]
-
-def background(r, g, b):
-
-    # Defining locations and colors for each vertex of the shape
-    vertices = [
-        #   positions        colors
-        0.0, 0.0, 0.0, r, g, b,
-        4.0, 0.0, 0.0, r, g, b,
-        4.0, 4.0, 0.0, r, g, b,
-        0.0, 4.0, 0.0, r, g, b]
-
-    # Defining connections among vertices
-    # We have a triangle every 3 indices specified
-    indices = [
-        0, 1, 2,
-        2, 3, 0]
-
-    return bs.Shape(vertices, indices)
 
 
 if __name__ == "__main__":
@@ -103,7 +106,6 @@ if __name__ == "__main__":
             line_count += 1
 
     controller.createBanana()
-    print(controller.banana.y)
 
     # Initialize glfw
     if not glfw.init():
@@ -124,7 +126,7 @@ if __name__ == "__main__":
     glfw.set_key_callback(window, on_key)
 
     # Assembling the shader program (pipeline) with both shaders
-    pipeline = es.SimpleTransformShaderProgram()
+    pipeline = es.SimpleTextureTransformShaderProgram()
 
     # Telling OpenGL to use our shader program
     glUseProgram(pipeline.shaderProgram)
@@ -151,6 +153,7 @@ if __name__ == "__main__":
     controller.createMonkey()
 
     monkey = controller.monkey.createMonkey()
+    monkey.childs += [es.toGPUShape(controller.monkey.hitboxShape("textures/monkey.png"), GL_REPEAT, GL_NEAREST)]
     main_scene_translate.childs += [monkey]
     main_scene_translate.childs += [controller.drawStage()]
 

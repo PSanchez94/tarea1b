@@ -51,11 +51,9 @@ class Monkey(solids.HitBox):
         # TODO: How to animate. Change texture per time?
         # monkey_texture= es.toGPUShape(bs.createTextureQuad("textures/wheel.png", 1, 1), GL_REPEAT, GL_NEAREST)
 
-        cube = sg.SceneGraphNode("cube")
-        cube.transform = tr.translate(self.x, self.y - self.height, 0)
-        cube.childs += [es.toGPUShape(self.hitboxShape())]
-
-        return cube
+        monkey_texture = sg.SceneGraphNode("Monkey Texture")
+        monkey_texture.transform = tr.translate(self.x, self.y - self.height, 0)
+        return monkey_texture
 
     def collidesWith(self, hitbox):
         if self.collision:
