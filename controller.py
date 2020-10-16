@@ -76,6 +76,9 @@ class Controller:
         for platform in self.platform_list:
             stage_scene.childs += [platform.drawPlatform()]
 
+        if self.banana is not None:
+            stage_scene.childs +=[self.banana.drawPlatform()]
+
         return stage_scene
 
     def add_platform(self, x, y):

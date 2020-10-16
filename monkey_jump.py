@@ -1,3 +1,4 @@
+import math
 import sys
 import csv
 import glfw
@@ -8,7 +9,6 @@ import scene_graph as sg
 import transformations as tr
 import basic_shapes as bs
 
-import monkey
 import controller
 
 controller = controller.Controller()
@@ -54,6 +54,7 @@ def createTextureQuad(image_filename, x, y, nx=1, ny=1):
     textureFileName = image_filename
 
     return bs.Shape(vertices, indices, textureFileName)
+
 
 def createBackgroundScenes():
     sky1_texture = sg.SceneGraphNode("Sky 1 Texture")
@@ -159,6 +160,14 @@ if __name__ == "__main__":
 
     scene_movement = -0.5
     scene_moving = False
+    monkey_right = False
+    monkey_left = False
+
+    monkey_texture = es.toGPUShape(controller.monkey.hitboxShape("textures/monkey.png"), GL_REPEAT, GL_NEAREST)
+    monkey_texture_left1 = es.toGPUShape(controller.monkey.hitboxShape("textures/left1.png"), GL_REPEAT, GL_NEAREST)
+    monkey_texture_left2 = es.toGPUShape(controller.monkey.hitboxShape("textures/left2.png"), GL_REPEAT, GL_NEAREST)
+    monkey_texture_right1 = es.toGPUShape(controller.monkey.hitboxShape("textures/right1.png"), GL_REPEAT, GL_NEAREST)
+    monkey_texture_right2 = es.toGPUShape(controller.monkey.hitboxShape("textures/right2.png"), GL_REPEAT, GL_NEAREST)
 
     # Our shapes here are always fully painted
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
@@ -220,6 +229,36 @@ if __name__ == "__main__":
         sg.findNode(main_scene_translate, "Forest").transform = tr.translate(0.0, scene_movement * 0.6, 0)
         sg.findNode(main_scene_translate, "Trees").transform = tr.translate(0.0, scene_movement * 0.1, 0)
         main_scene.transform = tr.translate(0.0, -scene_movement*0.6, 0)
+
+        if controller.leftKeyOn:
+            if monkey_left is False:
+                monkey_left = True
+            else:
+                if math.ceil(math.sin(theta*30)) == 1:
+                    sg.findNode(main_scene_translate, "Monkey Texture").childs = \
+                        [monkey_texture_left1]
+                else:
+                    sg.findNode(main_scene_translate, "Monkey Texture").childs = \
+                        [monkey_texture_left2]
+        elif controller.leftKeyOn is False and monkey_left is True:
+            monkey_left = False
+            sg.findNode(main_scene_translate, "Monkey Texture").childs = \
+                [monkey_texture]
+
+        if controller.rightKeyOn:
+            if monkey_right is False:
+                monkey_right = True
+            else:
+                if math.ceil(math.sin(theta*30)) == 1:
+                    sg.findNode(main_scene_translate, "Monkey Texture").childs = \
+                        [monkey_texture_right1]
+                else:
+                    sg.findNode(main_scene_translate, "Monkey Texture").childs = \
+                        [monkey_texture_right2]
+        elif controller.rightKeyOn is False and monkey_right is True:
+            monkey_right = False
+            sg.findNode(main_scene_translate, "Monkey Texture").childs = \
+                [monkey_texture]
 
         # Drawing
         sg.drawSceneGraphNode(main_scene, pipeline, "transform")

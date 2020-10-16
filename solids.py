@@ -5,6 +5,7 @@ import basic_shapes as bs
 
 from OpenGL.GL import *
 
+
 class HitBox:
     def __init__(self, x, y, w, h):
         self.x = x
@@ -57,11 +58,11 @@ class Platform(HitBox):
 
 class Banana(HitBox):
     def __init__(self, x, y):
-        super().__init__(x, y - 0.1, 0.3, 0.3)
+        super().__init__(x, y - 0.1, 0.2, 0.2)
 
     def drawPlatform(self):
 
-        platform = sg.SceneGraphNode("Bananas (" + str(self.x) + ", " + str(self.y) + ") Position")
+        platform = sg.SceneGraphNode("Banana (" + str(self.x) + ", " + str(self.y) + ") Position")
         platform.transform = tr.translate(self.x, self.y, 0)
         platform.childs += [es.toGPUShape(self.hitboxShape("textures/banana.png"), GL_REPEAT, GL_NEAREST)]
 
