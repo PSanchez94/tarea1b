@@ -233,6 +233,7 @@ if __name__ == "__main__":
             monkey_right = False
             controller.leftKeyOn = False
             controller.rightKeyOn = False
+            sg.findNode(main_scene_translate, "Banana Scale").transform = tr.uniformScale(abs(math.sin(theta*20)) + 1)
             if theta - controller.end_game_time > 0.5:
                 sys.exit("You won!")
         else:
