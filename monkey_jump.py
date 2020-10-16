@@ -192,7 +192,7 @@ if __name__ == "__main__":
             controller.monkey.start_jump()
 
         # Move scene upon reaching 2 floors above current one
-        if math.floor(controller.monkey.y) > controller.current_floor + 1.5 and scene_moving is False:
+        if math.floor(controller.monkey.y) > controller.current_floor + 1.0 and scene_moving is False:
             scene_moving = True
             controller.current_floor = math.floor(controller.monkey.y)
 
@@ -214,6 +214,8 @@ if __name__ == "__main__":
             controller.monkey.collision = False
             controller.monkey.start_jump()
             controller.monkey.is_falling = False
+            controller.leftKeyOn = False
+            controller.rightKeyOn = False
             sg.findNode(main_scene_translate, "Monkey Texture").childs = \
                 [monkey_texture_lost]
             if theta - controller.end_game_time > 0.35:
@@ -229,6 +231,8 @@ if __name__ == "__main__":
                 [monkey_texture_won]
             monkey_left = False
             monkey_right = False
+            controller.leftKeyOn = False
+            controller.rightKeyOn = False
             if theta - controller.end_game_time > 0.5:
                 sys.exit("You won!")
         else:
