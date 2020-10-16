@@ -168,6 +168,8 @@ if __name__ == "__main__":
     monkey_texture_left2 = es.toGPUShape(controller.monkey.hitboxShape("textures/left2.png"), GL_REPEAT, GL_NEAREST)
     monkey_texture_right1 = es.toGPUShape(controller.monkey.hitboxShape("textures/right1.png"), GL_REPEAT, GL_NEAREST)
     monkey_texture_right2 = es.toGPUShape(controller.monkey.hitboxShape("textures/right2.png"), GL_REPEAT, GL_NEAREST)
+    monkey_texture_lost = es.toGPUShape(controller.monkey.hitboxShape("textures/lost.png"), GL_REPEAT, GL_NEAREST)
+    monkey_texture_won = es.toGPUShape(controller.monkey.hitboxShape("textures/won.png"), GL_REPEAT, GL_NEAREST)
 
     # Our shapes here are always fully painted
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
@@ -207,17 +209,26 @@ if __name__ == "__main__":
 
         # Lose animation start and end
         if controller.lost:
+            monkey_left = False
+            monkey_right = False
             controller.monkey.collision = False
             controller.monkey.start_jump()
             controller.monkey.is_falling = False
+            sg.findNode(main_scene_translate, "Monkey Texture").childs = \
+                [monkey_texture_lost]
             if theta - controller.end_game_time > 0.35:
                 sys.exit("You fell out.")
+
 
         # Win condition
         if controller.won is False and controller.monkey.has_banana:
             controller.won = True
             controller.end_game_time = theta
         elif controller.won:
+            sg.findNode(main_scene_translate, "Monkey Texture").childs = \
+                [monkey_texture_won]
+            monkey_left = False
+            monkey_right = False
             if theta - controller.end_game_time > 0.5:
                 sys.exit("You won!")
         else:
