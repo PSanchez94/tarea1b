@@ -17,21 +17,21 @@ controller = controller.Controller()
 def on_key(window, key, scancode, action, mods):
 
     if action == glfw.PRESS:
-        if key == glfw.KEY_LEFT:
+        if key == glfw.KEY_A:
             controller.leftKeyOn = True
-        elif key == glfw.KEY_RIGHT:
+        elif key == glfw.KEY_D:
             controller.rightKeyOn = True
-        elif key == glfw.KEY_SPACE and not controller.jumpKeyOn:
+        elif key == glfw.KEY_W and not controller.jumpKeyOn:
             controller.jumpKeyOn = True
         elif key == glfw.KEY_ESCAPE:
             sys.exit()
 
     elif action == glfw.RELEASE:
-        if key == glfw.KEY_LEFT:
+        if key == glfw.KEY_A:
             controller.leftKeyOn = False
-        elif key == glfw.KEY_RIGHT:
+        elif key == glfw.KEY_D:
             controller.rightKeyOn = False
-        elif key == glfw.KEY_SPACE and controller.jumpKeyOn:
+        elif key == glfw.KEY_W and controller.jumpKeyOn:
             controller.jumpKeyOn = False
 
 
@@ -192,9 +192,9 @@ if __name__ == "__main__":
             controller.monkey.start_jump()
 
         # Move scene upon reaching 2 floors above current one
-        if controller.monkey.y > controller.current_floor + 2 and scene_moving is False:
+        if math.floor(controller.monkey.y) > controller.current_floor + 1.5 and scene_moving is False:
             scene_moving = True
-            controller.current_floor = controller.monkey.y
+            controller.current_floor = math.floor(controller.monkey.y)
 
         # Move the scene smoothly
         if scene_moving and scene_movement < controller.current_floor - 1.0:
